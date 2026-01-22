@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ госзакупок: увеличиваем ваши шансы на победу в 2-3 раза</title>
+    <style>
+        /* СБРОС СТИЛЕЙ И БАЗА */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            background: #fff;
+            overflow-x: hidden;
+        }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* ШАПКА (HERO) */
+        .hero {
+            background: 
+                linear-gradient(135deg, rgba(30, 60, 114, 0.88) 0%, rgba(42, 82, 152, 0.85) 100%),
+                url('img/1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-content { max-width: 900px; }
+        .hero h1 { 
+            font-size: 3.2rem; 
+            margin-bottom: 25px; 
+            font-weight: 800; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+        .hero p { 
+            font-size: 1.5rem; 
+            margin: 0 auto 40px; 
+            opacity: 0.95; 
+            line-height: 1.8;
+            max-width: 800px;
+        }
+        .hero-cta { 
+            display: inline-block; 
+            background: linear-gradient(90deg, #ff6b00 0%, #ff8f00 100%);
+            color: white; 
+            padding: 22px 50px; 
+            text-decoration: none; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            font-size: 1.3rem; 
+            transition: all 0.3s; 
+            box-shadow: 0 8px 25px rgba(255,107,0,0.4);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            margin-top: 20px;
+        }
+        .hero-cta:hover { 
+            background: linear-gradient(90deg, #ff8f00 0%, #ffaa00 100%);
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 30px rgba(255,107,0,0.6);
+        }
+        
+        /* ПРОБЛЕМА */
+        .problem { 
+            padding: 100px 20px; 
+            background: #f8f9fa;
+            position: relative;
+        }
+        .section-title { 
+            text-align: center; 
+            font-size: 2.8rem; 
+            margin-bottom: 60px; 
+            color: #1e3c72; 
+            font-weight: 700;
+            position: relative;
+        }
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #2a5298 0%, #ff6b00 100%);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+        .problem-cards { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 30px; 
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .problem-card { 
+            flex: 1; 
+            min-width: 300px; 
+            max-width: 350px;
+            background: white; 
+            padding: 40px 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); 
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 5px solid #2a5298;
+            position: relative;
+            overflow: hidden;
+        }
+        .problem-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #2a5298 0%, #ff6b00 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        .problem-card:hover { 
+            transform: translateY(-15px); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        .problem-card:hover:before {
+            transform: scaleX(1);
+        }
+        .problem-icon { 
+            font-size: 4rem; 
+            margin-bottom: 25px; 
+            color: #2a5298;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        .problem-card:hover .problem-icon {
+            transform: scale(1.1);
+        }
+        .problem-card h3 { 
+            margin-bottom: 20px; 
+            color: #2a5298; 
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .problem-card p {
+            color: #555;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+        
+        /* КАЛЬКУЛЯТОР */
+        .calculator { 
+            padding: 100px 20px; 
+            background: 
+                linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)),
+                url('img/2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        .calc-box { 
+            max-width: 700px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 60px; 
+            border-radius: 25px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12); 
+            border: 1px solid rgba(42, 82, 152, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .calc-box:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #2a5298 0%, #ff6b00 100%);
+        }
+        .calc-input-group { margin-bottom: 35px; }
+        .calc-input-group label { 
+            display: block; 
+            margin-bottom: 12px; 
+            font-weight: 600; 
+            color: #2a5298; 
+            font-size: 1.2rem;
+        }
+        .calc-input-group input { 
+            width: 100%; 
+            padding: 20px 25px; 
+            border: 2px solid #e1e8ff; 
+            border-radius: 12px; 
+            font-size: 1.3rem; 
+            transition: all 0.3s; 
+            background: #f8faff;
+            color: #333;
+        }
+        .calc-input-group input:focus { 
+            border-color: #2a5298; 
+            outline: none; 
+            background: white; 
+            box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.15);
+        }
+        .calc-input-group input::placeholder {
+            color: #aaa;
+        }
+        .calc-btn { 
+            background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%); 
+            color: white; 
+            padding: 22px; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            width: 100%; 
+            transition: all 0.3s;
+            margin-top: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .calc-btn:hover { 
+            background: linear-gradient(90deg, #1e3c72 0%, #162b5c 100%); 
+            box-shadow: 0 10px 25px rgba(42, 82, 152, 0.3);
+            transform: translateY(-3px);
+        }
+        .calc-results { 
+            margin-top: 50px; 
+            padding: 40px; 
+            background: linear-gradient(135deg, #f0f8ff 0%, #e1f0ff 100%); 
+            border-radius: 20px; 
+            border-left: 8px solid #2a5298;
+            animation: fadeInUp 0.6s ease-out;
+            display: none;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .calc-results h3 { 
+            color: #2a5298; 
+            margin-bottom: 30px; 
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .result-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 18px 0; 
+            border-bottom: 2px dashed #cce0ff; 
+            font-size: 1.2rem;
+            align-items: center;
+        }
+        .result-row:last-child { border-bottom: none; }
+        .result-row.total { 
+            font-weight: bold; 
+            color: #dc3545; 
+            font-size: 1.5rem; 
+            padding-top: 25px;
+            margin-top: 15px;
+            border-top: 3px solid #ff6b00;
+        }
+        .result-label { color: #555; }
+        .result-value { font-weight: 600; color: #2a5298; }
+        .result-value.total { color: #dc3545; font-size: 1.6rem; }
+        .calc-note {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(255, 107, 0, 0.1);
+            border-radius: 10px;
+            color: #b35900;
+            font-size: 0.95rem;
+            border-left: 4px solid #ff6b00;
+        }
+        
+        /* КОМАНДА */
+        .team { 
+            padding: 100px 20px; 
+            background: 
+                linear-gradient(rgba(248, 249, 250, 0.95), rgba(248, 249, 250, 0.95)),
+                url('img/3.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        .team-cards { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 40px; 
+            justify-content: center; 
+            margin-top: 60px;
+        }
+        .team-card { 
+            flex: 1; 
+            min-width: 320px; 
+            max-width: 360px;
+            background: white; 
+            padding: 50px 35px; 
+            border-radius: 25px; 
+            text-align: center; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .team-card:hover { 
+            transform: translateY(-15px) scale(1.02); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+        .team-card:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #2a5298 0%, #ff6b00 100%);
+        }
+        .team-photo { 
+            width: 160px; 
+            height: 160px; 
+            margin: 0 auto 30px; 
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 4rem; 
+            color: white;
+            box-shadow: 0 15px 30px rgba(42, 82, 152, 0.3);
+            border: 5px solid white;
+            position: relative;
+        }
+        .team-card h3 { 
+            margin-bottom: 15px; 
+            color: #1e3c72; 
+            font-size: 1.8rem; 
+            font-weight: 700;
+        }
+        .team-card .role { 
+            color: #ff6b00; 
+            font-weight: 700; 
+            margin-bottom: 30px; 
+            font-size: 1.2rem; 
+            letter-spacing: 0.5px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .team-card p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        .team-stats { 
+            margin-top: 80px; 
+            display: flex; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+            gap: 50px; 
+        }
+        .stat { 
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            min-width: 200px;
+            transition: transform 0.3s;
+        }
+        .stat:hover { transform: translateY(-10px); }
+        .stat-number { 
+            font-size: 3.5rem; 
+            font-weight: 800; 
+            color: #2a5298; 
+            line-height: 1;
+            background: linear-gradient(90deg, #2a5298 0%, #ff6b00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .stat-label { 
+            color: #666; 
+            margin-top: 10px; 
+            font-size: 1.2rem; 
+            font-weight: 600;
+        }
+        
+        /* ПРЕДЛОЖЕНИЕ */
+        .offer { 
+            padding: 100px 20px; 
+            background: 
+                linear-gradient(135deg, rgba(42, 82, 152, 0.95) 0%, rgba(30, 60, 114, 0.93) 100%),
+                url('img/4.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white; 
+            text-align: center; 
+            position: relative;
+        }
+        .offer-box { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.12); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 70px 60px; 
+            border-radius: 30px; 
+            border: 1px solid rgba(255,255,255,0.25);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        .offer-box h2 {
+            color: white;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+        .offer-subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+        .offer-price { 
+            font-size: 5rem; 
+            font-weight: 900; 
+            color: #ffcc00; 
+            margin: 30px 0; 
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            border: 3px solid rgba(255, 204, 0, 0.3);
+        }
+        .offer-list { 
+            text-align: left; 
+            max-width: 700px; 
+            margin: 50px auto; 
+            list-style: none;
+            padding: 0;
+        }
+        .offer-list li { 
+            margin: 25px 0; 
+            padding-left: 50px; 
+            position: relative; 
+            font-size: 1.3rem;
+            line-height: 1.6;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .offer-list li:last-child { border-bottom: none; }
+        .offer-list li:before { 
+            content: '✓'; 
+            position: absolute; 
+            left: 0; 
+            color: #4cd964; 
+            font-weight: bold; 
+            font-size: 2rem;
+            top: -5px;
+            background: rgba(76, 217, 100, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .offer-guarantee { 
+            background: rgba(255, 255, 255, 0.2); 
+            padding: 30px; 
+            border-radius: 20px; 
+            margin-top: 50px; 
+            font-style: italic;
+            font-size: 1.2rem;
+            border-left: 5px solid #ffcc00;
+            text-align: center;
+        }
+        .offer-guarantee strong { color: #ffcc00; }
+        
+        /* КОНТАКТЫ */
+        .contacts { 
+            padding: 100px 20px; 
+            text-align: center;
+            background: 
+                linear-gradient(rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.98)),
+                url('img/5.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        .contact-buttons { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 30px; 
+            justify-content: center; 
+            margin: 60px 0; 
+        }
+        .contact-btn { 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            padding: 35px 25px; 
+            text-decoration: none; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            font-size: 1.3rem; 
+            min-width: 280px; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+        .contact-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+        .contact-btn:hover { 
+            transform: translateY(-15px) scale(1.05); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        .contact-btn:hover:before {
+            transform: translateX(100%);
+        }
+        .contact-btn.telegram { 
+            background: linear-gradient(135deg, #0088cc 0%, #00a2ff 100%); 
+        }
+        .contact-btn.vk { 
+            background: linear-gradient(135deg, #07f 0%, #3a8cff 100%); 
+        }
+        .contact-btn.phone { 
+            background: linear-gradient(135deg, #28a745 0%, #34ce57 100%); 
+        }
+        .contact-btn.email { 
+            background: linear-gradient(135deg, #d44638 0%, #e85c4e 100%); 
+        }
+        .contact-icon { 
+            font-size: 3.5rem; 
+            margin-bottom: 20px;
+            display: block;
+        }
+        .contact-text {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        .contact-note {
+            max-width: 800px;
+            margin: 40px auto 0;
+            color: #666;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #2a5298;
+        }
+        
+        /* ФУТЕР */
+        .footer { 
+            background: #1a1a1a; 
+            color: #aaa; 
+            padding: 60px 20px; 
+            text-align: center; 
+            font-size: 1rem;
+            position: relative;
+        }
+        .footer:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #2a5298 0%, #ff6b00 100%);
+        }
+        .footer p { margin: 15px 0; }
+        .footer a { 
+            color: #4cd964; 
+            text-decoration: none; 
+            transition: color 0.3s;
+            font-weight: 600;
+        }
+        .footer a:hover { color: #7aff96; }
+        .footer-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 992px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.3rem; }
+            .section-title { font-size: 2.2rem; }
+            .offer-price { font-size: 4rem; }
+            .team-photo { width: 140px; height: 140px; }
+        }
+        @media (max-width: 768px) {
+            .hero { padding: 80px 20px; min-height: auto; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1.2rem; }
+            .section-title { font-size: 1.9rem; }
+            .problem-card, .team-card { min-width: 100%; }
+            .calc-box { padding: 40px 30px; }
+            .offer-box { padding: 50px 30px; }
+            .contact-btn { min-width: 100%; }
+            .stat { min-width: 150px; }
+            .offer-price { font-size: 3.5rem; padding: 15px 30px; }
+            .team-stats { gap: 25px; }
+            .stat-number { font-size: 2.8rem; }
+        }
+        @media (max-width: 480px) {
+            .hero-cta { padding: 18px 30px; font-size: 1.1rem; }
+            .calc-box { padding: 30px 20px; }
+            .calc-input-group input { padding: 16px 20px; }
+            .contact-btn { padding: 25px 20px; }
+            .offer-list li { font-size: 1.1rem; padding-left: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Вы теряете деньги в госзакупках из-за неверных решений</h1>
+            <p>Мы проводим полный анализ лота за 24 часа и даём точный ответ: стоит ли участвовать, на какую цену выходить и как обойти конкурентов.</p>
+            <a href="#contacts" class="hero-cta">Получить бесплатную консультацию</a>
+        </div>
+    </section>
+
+    <!-- ПРОБЛЕМЫ КЛИЕНТОВ -->
+    <section class="problem" id="problems">
+        <div class="container">
+            <h2 class="section-title">С какими проблемами сталкиваются 9 из 10 участников</h2>
+            <div class="problem-cards">
+                <div class="problem-card">
+                    <div class="problem-icon">💰</div>
+                    <h3>Проигрыш из-за цены</h3>
+                    <p>Снижаете на 15%, а побеждают со скидкой 5%. Теряете 10% прибыли в каждом тендере.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">📄</div>
+                    <h3>Отклонение заявки</h3>
+                    <p>Потратили неделю на подготовку, а заявку отклонили из-за формальной ошибки в документах.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">👥</div>
+                    <h3>Незнание конкурентов</h3>
+                    <p>Не понимаете, кто реально будет бороться за контракт и на какие условия они согласны.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КАЛЬКУЛЯТОР -->
+    <section class="calculator" id="calculator">
+        <div class="container">
+            <h2 class="section-title">Бесплатно: оцените базовые цифры по вашему лоту</h2>
+            <div class="calc-box">
+                <div class="calc-input-group">
+                    <label for="nmc">Начальная максимальная цена (НМЦ) лота, руб:</label>
+                    <input type="number" id="nmc" placeholder="500000" min="0" step="1000">
+                </div>
+                <div class="calc-input-group">
+                    <label for="discount">Планируемый процент снижения цены, %:</label>
+                    <input type="number" id="discount" placeholder="10" min="0" max="100" step="0.1">
+                </div>
+                <button class="calc-btn" onclick="calculate()">Рассчитать финансовые условия</button>
+                
+                <div class="calc-results" id="results">
+                    <h3>Результаты расчёта</h3>
+                    <div class="result-row">
+                        <span class="result-label">Ваша цена участия:</span>
+                        <span class="result-value" id="resPrice">0</span> руб
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Обеспечение заявки (1% от НМЦ):</span>
+                        <span class="result-value" id="resAppSec">0</span> руб
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Обеспечение контракта (10% от НМЦ):</span>
+                        <span class="result-value" id="resContSec">0</span> руб
+                    </div>
+                    <div class="result-row total">
+                        <span class="result-label">Общая сумма к заморозке:</span>
+                        <span class="result-value total" id="resTotalSec">0</span> руб
+                    </div>
+                    <div class="calc-note">
+                        *Обеспечение заявки блокируется на 5-10 дней, контракта — на весь срок исполнения.
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 40px; color: #555; max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">
+                Это только базовая математика. Для победы нужен анализ заказчика, конкурентов и рисков.
+            </p>
+        </div>
+    </section>
+
+    <!-- КОМАНДА -->
+    <section class="team" id="team">
+        <div class="container">
+            <h2 class="section-title">Команда, которая проводит анализ</h2>
+            <p style="text-align: center; max-width: 900px; margin: 0 auto 20px; color: #555; font-size: 1.3rem; line-height: 1.8;">
+                Мы распределяем задачи между специалистами. Каждый отвечает за свой этап — это гарантирует глубину и скорость.
+            </p>
+            <div class="team-cards">
+                <div class="team-card">
+                    <div class="team-photo">[ФОТО]</div>
+                    <h3>Алексей Петров</h3>
+                    <div class="role">Ведущий аналитик, 7 лет в закупках</div>
+                    <p>Собирает данные из ЕИС, анализирует историю закупок, строит ценовые модели. Разобрал 300+ лотов.</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-photo">[ФОТО]</div>
+                    <h3>Мария Семёнова</h3>
+                    <div class="role">Юрист по госзакупкам</div>
+                    <p>Проверяет заказчиков в РНП и реестре жалоб ФАС, анализирует документацию на соответствие 44-ФЗ.</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-photo">[ФОТО]</div>
+                    <h3>Дмитрий Волков</h3>
+                    <div class="role">Аналитик конкурентов</div>
+                    <p>Специализируется на стратегиях конкурентов. Предсказывает их действия и выявляет слабые места.</p>
+                </div>
+            </div>
+            <div class="team-stats">
+                <div class="stat">
+                    <div class="stat-number">650+</div>
+                    <div class="stat-label">проанализированных лотов</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label">клиентов увеличили % побед</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">24 ч</div>
+                    <div class="stat-label">средний срок подготовки отчёта</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПРЕДЛОЖЕНИЕ -->
+    <section class="offer" id="offer">
+        <div class="container">
+            <div class="offer-box">
+                <h2>Что вы получите за 5 000 рублей</h2>
+                <p class="offer-subtitle">Полный анализ лота «под ключ» с готовыми выводами для принятия решения.</p>
+                <div class="offer-price">5 000 ₽</div>
+                <ul class="offer-list">
+                    <li><strong>Проверка заказчика:</strong> РНП, реестр жалоб ФАС, оценка репутации.</li>
+                    <li><strong>Анализ 3-х ключевых конкурентов:</strong> их победы, типичное снижение цены, слабые места.</li>
+                    <li><strong>Рекомендованный «коридор цены»</strong> для победы с учётом статистики по нише.</li>
+                    <li><strong>Оценка рисков:</strong> «подводные камни» в документации, вероятность отмены закупки.</li>
+                    <li><strong>Готовый отчёт на 3-5 страницах</strong> с выводами и пошаговым планом действий.</li>
+                </ul>
+                <div class="offer-guarantee">
+                    <strong>Гарантия точности:</strong> Если в отчёте будет найдена фактологическая ошибка (неверные данные из ЕИС/РНП) — вернём 100% оплаты.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section class="contacts" id="contacts">
+        <div class="container">
+            <h2 class="section-title">Выберите удобный способ связи</h2>
+            <p style="max-width: 900px; margin: 0 auto 20px; color: #555; font-size: 1.4rem; line-height: 1.7;">
+                Обсудим ваш лот, ответим на вопросы и примем заказ на анализ. Работаем с 10:00 до 22:00 по МСК.
+            </p>
+            <div class="contact-buttons">
+                <a href="https://t.me/yournickname" class="contact-btn telegram">
+                    <span class="contact-icon">✈️</span>
+                    <strong>Telegram</strong>
+                    <span class="contact-text">отвечаем за 5 мин</span>
+                </a>
+                <a href="https://vk.com/yourpublicpage" class="contact-btn vk">
+                    <span class="contact-icon">👥</span>
+                    <strong>ВКонтакте</strong>
+                    <span class="contact-text">пишите в сообщения</span>
+                </a>
+                <a href="tel:+79991234567" class="contact-btn phone">
+                    <span class="contact-icon">📞</span>
+                    <strong>+7 (999) 123-45-67</strong>
+                    <span class="contact-text">звоните с 10:00 до 22:00</span>
+                </a>
+                <a href="mailto:you@mail.com?subject=Анализ лота" class="contact-btn email">
+                    <span class="contact-icon">✉️</span>
+                    <strong>Email</strong>
+                    <span class="contact-text">ответ в течение часа</span>
+                </a>
+            </div>
+            <div class="contact-note">
+                Напишите или позвоните — мы договоримся о деталях и приступим к анализу в день обращения.
+                Первая консультация (15 минут) — бесплатно.
+            </div>
+        </div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Команда анализа госзакупок. Работаем по 44-ФЗ и 223-ФЗ.</p>
+            <p>Используем только открытые данные: ЕИС (zakupki.gov.ru), РНП, реестр жалоб ФАС.</p>
+            <div class="footer-links">
+                <a href="#offer">Условия оказания услуг</a>
+                <a href="#contacts">Конфиденциальность</a>
+                <a href="#problems">Частые вопросы</a>
+                <a href="#calculator">Калькулятор</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function calculate() {
+            const nmc = parseInt(document.getElementById('nmc').value) || 0;
+            const discount = parseInt(document.getElementById('discount').value) || 0;
+            
+            const finalPrice = nmc * (1 - discount/100);
+            const appSec = nmc * 0.01;
+            const contSec = nmc * 0.10;
+            const totalSec = appSec + contSec;
+            
+            document.getElementById('resPrice').textContent = finalPrice.toLocaleString('ru-RU');
+            document.getElementById('resAppSec').textContent = appSec.toLocaleString('ru-RU');
+            document.getElementById('resContSec').textContent = contSec.toLocaleString('ru-RU');
+            document.getElementById('resTotalSec').textContent = totalSec.toLocaleString('ru-RU');
+            
+            const results = document.getElementById('results');
+            results.style.display = 'block';
+            setTimeout(() => {
+                results.scrollIntoView({behavior: 'smooth', block: 'center'});
+            }, 300);
+        }
+        
+        // Автоматический расчёт при изменении значений
+        document.getElementById('nmc').addEventListener('input', calculate);
+        document.getElementById('discount').addEventListener('input', calculate);
+        
+        // Плавная прокрутка для якорных ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Показываем результаты при загрузке, если есть значения
+        window.addEventListener('load', () => {
+            if (document.getElementById('nmc').value || document.getElementById('discount').value) {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>
