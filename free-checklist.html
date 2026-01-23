@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бесплатный чек-лист проверки лота за 5 минут</title>
+    <style>
+        /* БАЗОВЫЕ СТИЛИ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        /* ШАПКА */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(30, 60, 114, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* КОНТЕЙНЕР */
+        .checklist-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .checklist-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #2a5298 0%, #ff6b00 100%);
+        }
+        
+        /* ЧЕК-ЛИСТ */
+        .checklist-item {
+            margin-bottom: 35px;
+            padding-bottom: 35px;
+            border-bottom: 2px dashed #eaeaea;
+            position: relative;
+        }
+        
+        .checklist-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .item-number {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: #2a5298;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .item-title {
+            display: inline-block;
+            font-size: 1.4rem;
+            color: #1e3c72;
+            font-weight: 600;
+            margin-bottom: 15px;
+            vertical-align: middle;
+        }
+        
+        .item-description {
+            color: #555;
+            margin-bottom: 25px;
+            padding-left: 50px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        /* КНОПКИ ВЫБОРА */
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding-left: 50px;
+        }
+        
+        .option-btn {
+            padding: 12px 25px;
+            border: 2px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .option-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .option-btn.selected {
+            border-color: #2a5298;
+            background: #e8f0ff;
+            color: #1e3c72;
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.1);
+        }
+        
+        .risk-high { border-color: #dc3545 !important; background: #ffeaea !important; }
+        .risk-medium { border-color: #ffc107 !important; background: #fff8e1 !important; }
+        .risk-low { border-color: #28a745 !important; background: #e8f5e9 !important; }
+        
+        /* РЕЗУЛЬТАТЫ */
+        .results-container {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e1f0ff 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+            border-left: 8px solid #2a5298;
+            display: none;
+        }
+        
+        .results-container h2 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .result-item {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-label {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2a5298;
+        }
+        
+        .result-value.high { color: #dc3545; }
+        .result-value.medium { color: #ff6b00; }
+        .result-value.low { color: #28a745; }
+        
+        .recommendation {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #ff6b00;
+        }
+        
+        .recommendation h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        /* КНОПКА РАССЧИТАТЬ */
+        .calculate-btn {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px 40px;
+            background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 25px rgba(42, 82, 152, 0.3);
+        }
+        
+        .calculate-btn:hover {
+            background: linear-gradient(90deg, #1e3c72 0%, #162b5c 100%);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(42, 82, 152, 0.4);
+        }
+        
+        /* ПОДВАЛ */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-size: 1rem;
+            border-top: 2px solid #eaeaea;
+            margin-top: 40px;
+        }
+        
+        .footer a {
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .header p { font-size: 1.1rem; }
+            .checklist-container { padding: 25px 20px; }
+            .item-title { font-size: 1.2rem; }
+            .item-description { padding-left: 0; }
+            .options { padding-left: 0; }
+            .option-btn { min-width: 100%; }
+            .result-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 480px) {
+            .header { padding: 30px 15px; }
+            .header h1 { font-size: 1.8rem; }
+            .item-number { width: 30px; height: 30px; line-height: 30px; font-size: 1rem; }
+            .calculate-btn { padding: 18px 30px; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ШАПКА -->
+    <div class="header">
+        <h1>Чек-лист проверки лота за 5 минут</h1>
+        <p>Ответьте на 5 вопросов — узнайте, стоит ли участвовать в закупке и какие риски вас ждут</p>
+    </div>
+
+    <!-- ЧЕК-ЛИСТ -->
+    <div class="checklist-container">
+        <!-- ВОПРОС 1 -->
+        <div class="checklist-item">
+            <span class="item-number">1</span>
+            <h3 class="item-title">Заказчик в Реестре недобросовестных поставщиков (РНП)?</h3>
+            <p class="item-description">Проверьте по ИНН заказчика на сайте reis.223.fas.gov.ru. Если он там есть — участвовать нельзя.</p>
+            <div class="options">
+                <button class="option-btn" data-question="1" data-value="high">Да, есть в РНП</button>
+                <button class="option-btn" data-question="1" data-value="low">Нет, чистый</button>
+                <button class="option-btn" data-question="1" data-value="medium">Не проверял</button>
+            </div>
+        </div>
+
+        <!-- ВОПРОС 2 -->
+        <div class="checklist-item">
+            <span class="item-number">2</span>
+            <h3 class="item-title">Были ли жалобы на этого заказчика в ФАС за последний год?</h3>
+            <p class="item-description">Проверьте реестр жалоб на fas.gov.ru. Много жалоб = частые ошибки в документации.</p>
+            <div class="options">
+                <button class="option-btn" data-question="2" data-value="high">3 и более жалоб</button>
+                <button class="option-btn" data-question="2" data-value="medium">1-2 жалобы</button>
+                <button class="option-btn" data-question="2" data-value="low">Нет жалоб</button>
+                <button class="option-btn" data-question="2" data-value="medium">Не знаю</button>
+            </div>
+        </div>
+
+        <!-- ВОПРОС 3 -->
+        <div class="checklist-item">
+            <span class="item-number">3</span>
+            <h3 class="item-title">Сколько участников было в прошлых аналогичных закупках?</h3>
+            <p class="item-description">Посмотрите 3-5 завершенных закупок этого заказчика. Больше участников = ниже шансы и выше демпинг.</p>
+            <div class="options">
+                <button class="option-btn" data-question="3" data-value="low">1-2 участника</button>
+                <button class="option-btn" data-question="3" data-value="medium">3-5 участников</button>
+                <button class="option-btn" data-question="3" data-value="high">6+ участников</button>
+                <button class="option-btn" data-question="3" data-value="medium">Не смотрел</button>
+            </div>
+        </div>
+
+        <!-- ВОПРОС 4 -->
+        <div class="checklist-item">
+            <span class="item-number">4</span>
+            <h3 class="item-title">Какое среднее снижение цены в этой нише?</h3>
+            <p class="item-description">Посчитайте средний процент снижения по 5 последним завершенным закупкам.</p>
+            <div class="options">
+                <button class="option-btn" data-question="4" data-value="low">0-8% (рынок стабильный)</button>
+                <button class="option-btn" data-question="4" data-value="medium">9-15% (умеренная конкуренция)</button>
+                <button class="option-btn" data-question="4" data-value="high">16%+ (агрессивный демпинг)</button>
+                <button class="option-btn" data-question="4" data-value="medium">Не считал</button>
+            </div>
+        </div>
+
+        <!-- ВОПРОС 5 -->
+        <div class="checklist-item">
+            <span class="item-number">5</span>
+            <h3 class="item-title">Как часто заказчик отменяет закупки?</h3>
+            <p class="item-description">Проверьте историю: если больше 20% закупок отменены — высокий риск, что вашу тоже отменят.</p>
+            <div class="options">
+                <button class="option-btn" data-question="5" data-value="high">Часто (20%+ отмен)</button>
+                <button class="option-btn" data-question="5" data-value="medium">Иногда (5-19% отмен)</button>
+                <button class="option-btn" data-question="5" data-value="low">Редко (0-4% отмен)</button>
+                <button class="option-btn" data-question="5" data-value="medium">Не проверял</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- КНОПКА РАССЧИТАТЬ -->
+    <button class="calculate-btn" id="calculateBtn">Рассчитать мои риски</button>
+
+    <!-- РЕЗУЛЬТАТЫ -->
+    <div class="results-container" id="resultsContainer">
+        <h2>Результаты проверки</h2>
+        
+        <div class="result-grid">
+            <div class="result-item">
+                <div class="result-label">Общий уровень риска</div>
+                <div class="result-value" id="totalRisk">—</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Шансы на победу</div>
+                <div class="result-value" id="winChance">—</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Рекомендуемое снижение</div>
+                <div class="result-value" id="recommendedDiscount">—</div>
+            </div>
+        </div>
+        
+        <div class="recommendation" id="recommendationText">
+            <h3>Рекомендация</h3>
+            <p>Заполните все вопросы выше, чтобы получить персонализированную рекомендацию по участию в закупке.</p>
+        </div>
+    </div>
+
+    <!-- ПОДВАЛ -->
+    <div class="footer">
+        <p>Этот чек-лист — базовая проверка. Для полного анализа заказчика, конкурентов и расчета оптимальной цены закажите профессиональный отчёт.</p>
+        <p style="margin-top: 20px;">
+            <a href="https://auditor.efimov-legal.ru/#contacts">Заказать полный анализ за 5 000 ₽ →</a>
+        </p>
+        <p style="margin-top: 30px; font-size: 0.9rem; color: #888;">
+            © 2025 Команда анализа госзакупок. Данные из открытых источников: ЕИС, РНП, ФАС.
+        </p>
+    </div>
+
+    <script>
+        // Данные для всех ответов
+        let answers = {
+            1: null,
+            2: null,
+            3: null,
+            4: null,
+            5: null
+        };
+
+        // Веса рисков
+        const riskWeights = {
+            'high': 3,
+            'medium': 2,
+            'low': 1
+        };
+
+        // Обработка кликов по кнопкам
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const question = this.dataset.question;
+                const value = this.dataset.value;
+                
+                // Снимаем выделение со всех кнопок этого вопроса
+                document.querySelectorAll(`.option-btn[data-question="${question}"]`).forEach(b => {
+                    b.classList.remove('selected', 'risk-high', 'risk-medium', 'risk-low');
+                });
+                
+                // Добавляем выделение текущей кнопке
+                this.classList.add('selected', `risk-${value}`);
+                
+                // Сохраняем ответ
+                answers[question] = value;
+                
+                // Показываем кнопку "Рассчитать", если отвечены все вопросы
+                const allAnswered = Object.values(answers).every(val => val !== null);
+                if (allAnswered) {
+                    document.getElementById('calculateBtn').style.display = 'block';
+                }
+            });
+        });
+
+        // Рассчет результатов
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            // Проверяем, что все вопросы отвечены
+            const unanswered = Object.entries(answers).filter(([q, a]) => a === null);
+            if (unanswered.length > 0) {
+                alert('Ответьте на все вопросы перед расчетом');
+                return;
+            }
+            
+            // Считаем общий балл риска
+            let totalScore = 0;
+            for (const [question, answer] of Object.entries(answers)) {
+                totalScore += riskWeights[answer];
+            }
+            
+            // Максимальный возможный балл
+            const maxScore = Object.keys(answers).length * 3; // 5 вопросов * 3 балла за high
+            
+            // Процент риска
+            const riskPercent = Math.round((totalScore / maxScore) * 100);
+            
+            // Определяем уровень риска
+            let riskLevel, riskClass;
+            if (riskPercent >= 70) {
+                riskLevel = 'Высокий';
+                riskClass = 'high';
+            } else if (riskPercent >= 40) {
+                riskLevel = 'Средний';
+                riskClass = 'medium';
+            } else {
+                riskLevel = 'Низкий';
+                riskClass = 'low';
+            }
+            
+            // Шансы на победу (обратно пропорционально риску)
+            const winChance = 100 - riskPercent;
+            let winText;
+            if (winChance >= 70) winText = 'Высокие';
+            else if (winChance >= 40) winText = 'Средние';
+            else winText = 'Низкие';
+            
+            // Рекомендуемое снижение цены
+            let discount;
+            if (riskPercent >= 70) discount = '15-25%';
+            else if (riskPercent >= 40) discount = '8-15%';
+            else discount = '3-8%';
+            
+            // Обновляем результаты
+            document.getElementById('totalRisk').textContent = riskLevel;
+            document.getElementById('totalRisk').className = `result-value ${riskClass}`;
+            
+            document.getElementById('winChance').textContent = winText;
+            document.getElementById('winChance').className = `result-value ${winChance >= 70 ? 'low' : winChance >= 40 ? 'medium' : 'high'}`;
+            
+            document.getElementById('recommendedDiscount').textContent = discount;
+            document.getElementById('recommendedDiscount').className = `result-value ${riskClass}`;
+            
+            // Генерируем рекомендацию
+            let recommendation = '';
+            if (riskPercent >= 70) {
+                recommendation = '<strong>Не рекомендуем участвовать.</strong> Риски слишком высоки: заказчик проблемный, конкуренция агрессивная. Высокая вероятность отмены закупки или демпинга со стороны конкурентов.';
+            } else if (riskPercent >= 40) {
+                recommendation = '<strong>Участвовать можно, но с осторожностью.</strong> Проверьте документы на соответствие 44-ФЗ, подготовьте конкурентное предложение. Рекомендуем заложить в цену дополнительный запас.';
+            } else {
+                recommendation = '<strong>Рекомендуем участвовать.</strong> Рынок стабильный, заказчик надежный, конкуренция умеренная. Сфокусируйтесь на соответствии техническому заданию и подготовке качественной документации.';
+            }
+            
+            // Особые случаи
+            if (answers[1] === 'high') {
+                recommendation += '<br><br><strong>⚠️ ВНИМАНИЕ:</strong> Заказчик находится в РНП. Участвовать в его закупках запрещено законом.';
+            }
+            
+            if (answers[5] === 'high') {
+                recommendation += '<br><br><strong>⚠️ ВНИМАНИЕ:</strong> Этот заказчик часто отменяет закупки. Будьте готовы, что вашу заявку могут аннулировать даже после подачи.';
+            }
+            
+            document.getElementById('recommendationText').innerHTML = `<h3>Рекомендация</h3><p>${recommendation}</p>`;
+            
+            // Показываем результаты
+            document.getElementById('resultsContainer').style.display = 'block';
+            document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth' });
+            
+            // Прячем кнопку
+            this.style.display = 'none';
+        });
+
+        // Анимация появления при загрузке
+        window.addEventListener('load', function() {
+            const items = document.querySelectorAll('.checklist-item');
+            items.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html>
