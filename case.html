@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реальные кейсы анализа госзакупок</title>
+    <style>
+        /* БАЗОВЫЕ СТИЛИ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            background: #fff;
+            overflow-x: hidden;
+        }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* ШАПКА СТРАНИЦЫ */
+        .page-header {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.9) 0%, rgba(42, 82, 152, 0.85) 100%),
+                        url('https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .page-header h1 { 
+            font-size: 3.5rem; 
+            margin-bottom: 20px; 
+            font-weight: 800; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .page-header p { 
+            font-size: 1.5rem; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            opacity: 0.95; 
+        }
+        
+        /* ФИЛЬТР КЕЙСОВ */
+        .case-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 12px 30px;
+            background: #f0f8ff;
+            border: 2px solid #2a5298;
+            color: #2a5298;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: #2a5298;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* КАРТОЧКИ КЕЙСОВ */
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+        .case-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 5px solid #2a5298;
+            position: relative;
+        }
+        .case-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        .case-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+        .badge-cancelled { background: #dc3545; color: white; }
+        .badge-completed { background: #28a745; color: white; }
+        .case-header {
+            padding: 30px 30px 20px;
+            border-bottom: 2px solid #f0f8ff;
+        }
+        .case-number {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        .case-title {
+            color: #1e3c72;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .case-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        .case-body {
+            padding: 25px 30px;
+        }
+        .case-problem, .case-solution {
+            margin-bottom: 25px;
+        }
+        .case-body h4 {
+            color: #2a5298;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .case-body h4:before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .case-problem h4:before { background: #dc3545; }
+        .case-solution h4:before { background: #28a745; }
+        .case-body ul {
+            padding-left: 20px;
+            color: #555;
+        }
+        .case-body li {
+            margin-bottom: 8px;
+        }
+        .case-stats {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-top: 2px solid #eaeaea;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2a5298;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* БЛОК С ВЫВОДАМИ */
+        .conclusions {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 70px 20px;
+            border-radius: 30px;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+        .conclusions h2 {
+            color: #1e3c72;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        .conclusion-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        .conclusion-card {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: left;
+            position: relative;
+            padding-left: 70px;
+        }
+        .conclusion-card:before {
+            content: '!';
+            position: absolute;
+            left: 30px;
+            top: 35px;
+            width: 30px;
+            height: 30px;
+            background: #2a5298;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .conclusion-card h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        /* CTA БЛОК */
+        .case-cta {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border-radius: 30px;
+            margin-bottom: 80px;
+        }
+        .case-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .case-cta p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(90deg, #ff6b00 0%, #ff8f00 100%);
+            color: white;
+            padding: 22px 50px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(255,107,0,0.4);
+        }
+        .cta-button:hover {
+            background: linear-gradient(90deg, #ff8f00 0%, #ffaa00 100%);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(255,107,0,0.6);
+        }
+        
+        /* ФУТЕР */
+        .footer { 
+            background: #1a1a1a; 
+            color: #aaa; 
+            padding: 50px 20px; 
+            text-align: center; 
+            font-size: 1rem;
+            position: relative;
+        }
+        .footer:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #2a5298 0%, #ff6b00 100%);
+        }
+        .footer a { 
+            color: #4cd964; 
+            text-decoration: none; 
+            transition: color 0.3s;
+            font-weight: 600;
+            margin: 0 10px;
+        }
+        .footer a:hover { color: #7aff96; }
+        
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 2.5rem; }
+            .page-header p { font-size: 1.2rem; }
+            .case-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; gap: 25px; }
+            .conclusion-card { min-width: 100%; }
+            .case-cta h2 { font-size: 2rem; }
+            .filter-btn { padding: 10px 20px; font-size: 0.9rem; }
+            .footer a { display: block; margin: 10px 0; }
+        }
+        
+        /* КНОПКА НАВЕРХ */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #2a5298;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+        }
+        .back-to-top:hover {
+            background: #1e3c72;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- ЯКОРЬ ДЛЯ НАЧАЛА -->
+    <a id="top" name="top" style="position: absolute; top: 0; left: 0; opacity: 0;">Начало</a>
+    
+    <!-- КНОПКА НАВЕРХ -->
+    <a href="#top" class="back-to-top" id="backToTop">↑</a>
+
+    <!-- ШАПКА СТРАНИЦЫ -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Реальные кейсы из практики</h1>
+            <p>Мы разобрали 5 случайных закупок с ЕИС. Вот что там происходит на самом деле — без прикрас и шаблонных выводов.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- ФИЛЬТР -->
+        <div class="case-filter">
+            <button class="filter-btn active" onclick="filterCases('all')">Все кейсы</button>
+            <button class="filter-btn" onclick="filterCases('cancelled')">Отменённые</button>
+            <button class="filter-btn" onclick="filterCases('completed')">Завершённые</button>
+            <button class="filter-btn" onclick="filterCases('auction')">Аукционы</button>
+            <button class="filter-btn" onclick="filterCases('competition')">Конкурсы</button>
+        </div>
+
+        <!-- КЕЙС 1 -->
+        <div class="case-grid">
+            <div class="case-card" data-type="cancelled competition">
+                <div class="case-badge badge-cancelled">Отменён</div>
+                <div class="case-header">
+                    <div class="case-number">№0373100109525000001</div>
+                    <h3 class="case-title">Библиотека и юристы: как жалоба убила закупку</h3>
+                    <div class="case-meta">
+                        <span>Заказчик: <strong>РГДБ</strong></span>
+                        <span>НМЦ: <strong>1 041 667 ₽</strong></span>
+                    </div>
+                </div>
+                <div class="case-body">
+                    <div class="case-problem">
+                        <h4>Что случилось</h4>
+                        <ul>
+                            <li>Закупка на юридические услуги для федеральной библиотеки.</li>
+                            <li>В документации нашли нарушение — кто-то подал жалобу в ФАС.</li>
+                            <li>Всё заморожено, потом отменено. Участники потратили время впустую.</li>
+                        </ul>
+                    </div>
+                    <div class="case-solution">
+                        <h4>Что мы проверили бы до участия</h4>
+                        <ul>
+                            <li>Реестр жалоб ФАС на этого заказчика (были ли прецеденты).</li>
+                            <li>Текст документации на предмет явных «подводных камней».</li>
+                            <li>Историю аналогичных закупок заказчика — часто ли отменяет.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="case-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">0%</div>
+                            <div class="stat-label">Снижение цены</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">∞</div>
+                            <div class="stat-label">Потерянное время</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Риск отмены</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КЕЙС 2 -->
+            <div class="case-card" data-type="cancelled competition">
+                <div class="case-badge badge-cancelled">Отменён</div>
+                <div class="case-header">
+                    <div class="case-number">№0172300005523000020</div>
+                    <h3 class="case-title">Муниципалы и их вечные переделки</h3>
+                    <div class="case-meta">
+                        <span>Заказчик: <strong>Посёлок Тярлево</strong></span>
+                        <span>НМЦ: <strong>977 020 ₽</strong></span>
+                    </div>
+                </div>
+                <div class="case-body">
+                    <div class="case-problem">
+                        <h4>Что случилось</h4>
+                        <ul>
+                            <li>Муниципальный заказчик проводит закупку услуг спецорганизации.</li>
+                            <li>Через время — отмена «в связи с необходимостью внесения изменений».</li>
+                            <li>Та же история повторяется у этого заказчика в 2024 и 2025 годах.</li>
+                        </ul>
+                    </div>
+                    <div class="case-solution">
+                        <h4>Что мы проверили бы до участия</h4>
+                        <ul>
+                            <li>Архив закупок заказчика: сколько раз отменял в прошлом.</li>
+                            <li>Сроки — если отмена часты, не стоит начинать подготовку за месяц.</li>
+                            <li>Есть ли у заказчика штатный юрист или он постоянно ошибается.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="case-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Отмены за 2 года</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Муниц.</div>
+                            <div class="stat-label">Тип заказчика</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Высокий</div>
+                            <div class="stat-label">Риск повторения</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КЕЙС 3 -->
+            <div class="case-card" data-type="completed auction">
+                <div class="case-badge badge-completed">Завершён</div>
+                <div class="case-header">
+                    <div class="case-number">№0119300030025000033</div>
+                    <h3 class="case-title">Аукцион без борьбы: один участник — король</h3>
+                    <div class="case-meta">
+                        <span>Заказчик: <strong>Посёлок Раздолинск</strong></span>
+                        <span>НМЦ: <strong>150 000 ₽</strong></span>
+                    </div>
+                </div>
+                <div class="case-body">
+                    <div class="case-problem">
+                        <h4>Что случилось</h4>
+                        <ul>
+                            <li>Аукцион на работы по теплоснабжению (концессия).</li>
+                            <li>В ЕИС показывалось «2 участника», но по факту допущен 1.</li>
+                            <li>Победитель взял контракт по начальной цене без снижения.</li>
+                        </ul>
+                    </div>
+                    <div class="case-solution">
+                        <h4>Что мы проверили бы до участия</h4>
+                        <ul>
+                            <li>Не «количество заявок», а «количество допущенных» в прошлых протоколах.</li>
+                            <li>Есть ли в нише постоянные игроки, которые могут не прийти.</li>
+                            <li>Сложность ТЗ — если специфично, можно не снижать цену вообще.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="case-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">0%</div>
+                            <div class="stat-label">Снижение</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Участник</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">150 000 ₽</div>
+                            <div class="stat-label">Цена победы</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КЕЙС 4 -->
+            <div class="case-card" data-type="completed competition">
+                <div class="case-badge badge-completed">Завершён</div>
+                <div class="case-header">
+                    <div class="case-number">№0371200017524000078</div>
+                    <h3 class="case-title">Патентные войны: узкая ниша, адекватная цена</h3>
+                    <div class="case-meta">
+                        <span>Заказчик: <strong>Корпорация развития МСП</strong></span>
+                        <span>НМЦ: <strong>200 000 ₽</strong></span>
+                    </div>
+                </div>
+                <div class="case-body">
+                    <div class="case-problem">
+                        <h4>Что случилось</h4>
+                        <ul>
+                            <li>Конкурс на патентные исследования (товарный знак).</li>
+                            <li>Участвовало 2 компании, обе из узкого круга специалистов.</li>
+                            <li>Победитель снизил цену на 11% (22 тыс. руб), не демпингуя.</li>
+                        </ul>
+                    </div>
+                    <div class="case-solution">
+                        <h4>Что мы проверили бы до участия</h4>
+                        <ul>
+                            <li>Кто постоянные участники в этой нише и их типичный % снижения.</li>
+                            <li>Соответствие квалификационным требованиям (здесь это важнее цены).</li>
+                            <li>Есть ли у заказчика «любимый» поставщик по прошлым закупкам.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="case-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">11%</div>
+                            <div class="stat-label">Снижение</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Участника</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">178 000 ₽</div>
+                            <div class="stat-label">Цена победы</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КЕЙС 5 -->
+            <div class="case-card" data-type="completed competition">
+                <div class="case-badge badge-completed">Завершён</div>
+                <div class="case-header">
+                    <div class="case-number">№0340100010824000010</div>
+                    <h3 class="case-title">Микролот: за 10 тысяч борются три компании</h3>
+                    <div class="case-meta">
+                        <span>Заказчик: <strong>ФКУ УФСИН</strong></span>
+                        <span>НМЦ: <strong>9 600 ₽</strong></span>
+                    </div>
+                </div>
+                <div class="case-body">
+                    <div class="case-problem">
+                        <h4>Что случилось</h4>
+                        <ul>
+                            <li>Услуги по продаже металлолома для учреждения ФСИН.</li>
+                            <li>Сумма смехотворная, но нашлось 3 участника.</li>
+                            <li>Победитель снизил цену на 8.3% (800 руб).</li>
+                        </ul>
+                    </div>
+                    <div class="case-solution">
+                        <h4>Что мы проверили бы до участия</h4>
+                        <ul>
+                            <li>Требуется ли обеспечение заявки (здесь — нет, поэтому участие почти бесплатно).</li>
+                            <li>Кто эти «вечные» участники микролотов и их стратегия.</li>
+                            <li>Можно ли использовать такой контракт для наработки истории.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="case-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">8.3%</div>
+                            <div class="stat-label">Снижение</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Участника</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8 800 ₽</div>
+                            <div class="stat-label">Цена победы</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК ВЫВОДОВ -->
+        <section class="conclusions">
+            <h2>Что мы поняли, разобрав эти 5 лотов</h2>
+            <div class="conclusion-cards">
+                <div class="conclusion-card">
+                    <h3>Отмена — главный риск</h3>
+                    <p>40% закупок отменяются из-за ошибок заказчика. Участвовать, не проверив историю заказчика на «отмены» — играть в русскую рулетку.</p>
+                </div>
+                <div class="conclusion-card">
+                    <h3>Демпинга нет там, где есть экспертиза</h3>
+                    <p>В узких нишах (патенты, концессии) цена снижается на 0-15%. Побеждает не самый дешёвый, а тот, кто соответствует требованиям.</p>
+                </div>
+                <div class="conclusion-card">
+                    <h3>Данные из ЕИС врут</h3>
+                    <p>«Количество участников» в карточке лота — это заявки, а не допущенные. Итоговый протокол покажет реальную картину.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="case-cta">
+            <h2>Хотите такой же детальный разбор вашего лота?</h2>
+            <p>Мы откроем документы, проверим заказчика и конкурентов, посчитаем реальные шансы и цену для победы. Отчёт за 24 часа.</p>
+            <a href="https://auditor.efimov-legal.ru/#contacts" class="cta-button">Заказать анализ за 5 000 ₽</a>
+        </section>
+    </div>
+
+    <!-- ФУТЕР -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Команда анализа госзакупок. Работаем по 44-ФЗ и 223-ФЗ.</p>
+            <p>Используем только открытые данные: ЕИС (zakupki.gov.ru), РНП, реестр жалоб ФАС.</p>
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #444;">
+                <a href="https://auditor.efimov-legal.ru">← Назад на главную</a>
+                <a href="https://auditor.efimov-legal.ru/#contacts">Наши контакты</a>
+                <a href="#top">К началу страницы</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Фильтрация кейсов
+        function filterCases(type) {
+            const cards = document.querySelectorAll('.case-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Активная кнопка
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Показ/скрытие карточек
+            cards.forEach(card => {
+                if (type === 'all' || card.dataset.type.includes(type)) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.style.opacity = '1', 10);
+                } else {
+                    card.style.opacity = '0';
+                    setTimeout(() => card.style.display = 'none', 300);
+                }
+            });
+        }
+        
+        // Кнопка "Наверх"
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        // Плавная прокрутка для внутренних ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            if (anchor.getAttribute('href') === '#') return;
+            
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#top') {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Автоматический расчёт и показ карточек при загрузке
+        window.addEventListener('load', function() {
+            // Показываем все карточки с анимацией
+            const cards = document.querySelectorAll('.case-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
