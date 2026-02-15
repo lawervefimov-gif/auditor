@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ОКВЭД → ОКПД2 для закупок | auditor.efimov-legal.ru</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0a1828 0%, #162b40 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 16px;
+        }
+        .container {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(10px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.2) inset;
+            padding: 36px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            color: #0a1f33;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        h1 span {
+            background: linear-gradient(145deg, #1f5f8e, #0f3b5c);
+            color: white;
+            font-size: 1.1rem;
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-weight: 600;
+        }
+        .subhead {
+            font-size: 1.2rem;
+            color: #2e4660;
+            margin-bottom: 36px;
+            border-left: 6px solid #1f5f8e;
+            padding-left: 24px;
+            background: rgba(31,95,142,0.08);
+            border-radius: 0 40px 40px 0;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+        .search-panel {
+            background: white;
+            border-radius: 32px;
+            padding: 32px;
+            box-shadow: 0 15px 40px -15px rgba(0,30,60,0.2);
+            margin-bottom: 32px;
+            border: 1px solid #dfe9f2;
+        }
+        .search-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-input-wrapper {
+            flex: 5;
+            min-width: 300px;
+            position: relative;
+        }
+        .search-input-wrapper input {
+            width: 100%;
+            padding: 22px 28px;
+            font-size: 1.3rem;
+            border: 2px solid #c8d8ec;
+            border-radius: 70px;
+            background: #f8fcff;
+            transition: 0.2s;
+            outline: none;
+            font-weight: 500;
+        }
+        .search-input-wrapper input:focus {
+            border-color: #1f5f8e;
+            box-shadow: 0 0 0 5px rgba(31,95,142,0.15);
+            background: white;
+        }
+        .search-input-wrapper label {
+            position: absolute;
+            left: 28px;
+            top: -12px;
+            background: white;
+            padding: 0 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1f5f8e;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex: 2;
+            min-width: 280px;
+        }
+        .btn {
+            padding: 20px 30px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 70px;
+            cursor: pointer;
+            transition: 0.1s;
+            background: white;
+            color: #1a3e5c;
+            border: 2px solid #bed2ea;
+            flex: 1;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: #1f5f8e;
+            border: 2px solid #1f5f8e;
+            color: white;
+            box-shadow: 0 8px 20px -8px #1f5f8e;
+        }
+        .btn-primary:hover {
+            background: #134572;
+            transform: scale(0.98);
+        }
+        .btn:hover {
+            background: #e2efff;
+        }
+        .examples {
+            margin-top: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .examples span {
+            color: #2e4c72;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-right: 8px;
+        }
+        .chip {
+            background: white;
+            border: 1px solid #b6ceec;
+            border-radius: 50px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f5f8e;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.02);
+        }
+        .chip:hover {
+            background: #1f5f8e;
+            color: white;
+            border-color: #1f5f8e;
+            transform: translateY(-2px);
+        }
+        .stats {
+            background: #e3eefb;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-size: 1rem;
+            color: #173e60;
+            margin: 25px 0 0 0;
+            font-weight: 500;
+        }
+        .result-card {
+            background: white;
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 25px 45px -15px rgba(0,35,70,0.3);
+            border: 1px solid #d0e0f0;
+            margin-bottom: 32px;
+        }
+        .result-header {
+            background: linear-gradient(145deg, #15354f, #0c263b);
+            color: white;
+            padding: 28px 36px;
+        }
+        .result-header h2 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .result-header h2 small {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.9;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 24px;
+            border-radius: 50px;
+        }
+        .result-okved-desc {
+            background: #e8f0fa;
+            padding: 26px 36px;
+            border-bottom: 1px solid #c2d6ef;
+            font-size: 1.4rem;
+            color: #0a2942;
+            font-weight: 600;
+            border-left: 12px solid #2b6f9c;
+        }
+        .table-container {
+            padding: 24px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 20px 20px;
+            background: #f0f7ff;
+            color: #0e3152;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 20px 20px;
+            border-bottom: 1px solid #d2e1f0;
+            font-size: 1.1rem;
+        }
+        .code-badge {
+            background: #e2efff;
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #003b70;
+            display: inline-block;
+        }
+        .search-link {
+            background: none;
+            border: 2px solid #1f5f8e;
+            padding: 10px 24px;
+            border-radius: 50px;
+            color: #1f5f8e;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: 0.1s;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        .search-link:hover {
+            background: #1f5f8e;
+            color: white;
+        }
+        .warning-note {
+            background: #fff5e0;
+            border-left: 10px solid #e09f2c;
+            padding: 24px 32px;
+            border-radius: 24px;
+            margin: 20px 28px 28px 28px;
+            color: #2b3a4f;
+            font-size: 1.1rem;
+        }
+        /* НОВЫЙ БЛОК CTA - МЯГКИЙ ПРИЗЫВ */
+        .cta-soft {
+            background: #e3f0fd;
+            border-radius: 24px;
+            padding: 20px 28px;
+            margin: 20px 28px 28px 28px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border: 1px solid #b8d4f0;
+        }
+        .cta-soft-text {
+            font-size: 1.2rem;
+            color: #0a3150;
+            font-weight: 500;
+        }
+        .cta-soft-text strong {
+            color: #1f5f8e;
+        }
+        .cta-soft-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .cta-button {
+            padding: 12px 28px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cta-button-tg {
+            background: #1f5f8e;
+            color: white;
+        }
+        .cta-button-tg:hover {
+            background: #134572;
+            transform: scale(0.98);
+        }
+        .cta-button-wa {
+            background: #25D366;
+            color: white;
+        }
+        .cta-button-wa:hover {
+            background: #128C7E;
+            transform: scale(0.98);
+        }
+        /* КОНТАКТНЫЙ БЛОК */
+        .contact-block {
+            background: #0b2a44;
+            border-radius: 36px;
+            padding: 40px 48px;
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 25px 40px -15px #0a1e32;
+            border: 1px solid #2d6b9c;
+            margin-top: 20px;
+        }
+        .contact-text {
+            flex: 2;
+            min-width: 300px;
+        }
+        .contact-text h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            color: white;
+            line-height: 1.2;
+        }
+        .contact-text p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin: 0;
+            line-height: 1.5;
+            color: #d3e4f5;
+        }
+        .contact-methods {
+            flex: 1.5;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .contact-item {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+            padding: 16px 24px;
+            border-radius: 70px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: 0.15s;
+        }
+        .contact-item:hover {
+            background: rgba(255,255,255,0.18);
+            transform: translateX(6px);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .contact-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            filter: brightness(0) invert(1);
+        }
+        .contact-item a {
+            color: white;
+            text-decoration: none;
+            flex: 1;
+            letter-spacing: 0.02em;
+        }
+        .contact-item a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            color: #5f83a5;
+            font-size: 1rem;
+        }
+        .footer-note a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>
+        ⚡ ОКВЭД → ОКПД2 
+        <span>ДЛЯ ГОСЗАКУПОК</span>
+    </h1>
+    <div class="subhead">
+        Введи любой код ОКВЭД2 — получи список ОКПД2 для поиска тендеров на zakupki.gov.ru
+    </div>
+
+    <div class="search-panel">
+        <div class="search-row">
+            <div class="search-input-wrapper">
+                <label>🔎 КОД ОКВЭД</label>
+                <input type="text" id="okvedInput" placeholder="Например: 58.29, 41.20, 62.01, 69.20" value="58.29">
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" id="searchBtn">НАЙТИ</button>
+                <button class="btn" id="resetBtn">СБРОС</button>
+            </div>
+        </div>
+        <div class="examples">
+            <span>⚡ Часто ищут:</span>
+            <span class="chip" data-code="58.29">58.29 (ПО)</span>
+            <span class="chip" data-code="62.01">62.01 (разработка)</span>
+            <span class="chip" data-code="41.20">41.20 (строительство)</span>
+            <span class="chip" data-code="47.11">47.11 (розница)</span>
+            <span class="chip" data-code="69.20">69.20 (бухгалтерия)</span>
+            <span class="chip" data-code="85.41">85.41 (обучение)</span>
+            <span class="chip" data-code="49.41">49.41 (перевозки)</span>
+            <span class="chip" data-code="74.90">74.90 (услуги)</span>
+        </div>
+        <div class="stats" id="stats">
+            📊 В базе: 400+ групп ОКВЭД и 1500+ кодов ОКПД2 (обновление 2024-2025)
+        </div>
+    </div>
+
+    <!-- РЕЗУЛЬТАТЫ ПОИСКА -->
+    <div id="resultsContainer" class="result-card">
+        <!-- вставится через js -->
+    </div>
+
+    <!-- КОНТАКТНЫЙ БЛОК С МЯГКИМ CTA -->
+    <div class="contact-block">
+        <div class="contact-text">
+            <h3>🚀 НАШЛИ ПОДХОДЯЩИЙ КОД?</h3>
+            <p>Мы бесплатно проверим, есть ли сейчас активные закупки по вашему ОКПД2, и поможем подать заявку. Просто напишите код в мессенджер:</p>
+        </div>
+        <div class="contact-methods">
+            <div class="contact-item">
+                <span class="contact-icon">📱</span>
+                <a href="https://t.me/efimov_legal" target="_blank">Telegram: @efimov_legal</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">💬</span>
+                <a href="https://wa.me/79539077575" target="_blank">WhatsApp: +7 (953) 907-75-75</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <a href="mailto:lawer.v.efimov@ya.ru">lawer.v.efimov@ya.ru</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">🌐</span>
+                <a href="https://auditor.efimov-legal.ru" target="_blank">auditor.efimov-legal.ru</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        ⚡ Данные на основе официальных классификаторов (ФНС, Минэкономразвития). <a href="https://auditor.efimov-legal.ru" target="_blank">auditor.efimov-legal.ru</a>
+    </div>
+</div>
+
+<script>
+(function() {
+    // ------------------------------------------------------------
+    // БАЗА ОКВЭД → ОКПД2 (СОБРАНА ПО ВСЕМ РАЗДЕЛАМ)
+    // ------------------------------------------------------------
+    const okvedDb = [
+        // Раздел A: Сельское хозяйство
+        { okved: '01.11', desc: 'Выращивание зерновых культур', okpd: [
+            { code: '01.11.1', desc: 'Пшеница, зерно' },
+            { code: '01.11.2', desc: 'Кукуруза' },
+            { code: '01.11.3', desc: 'Ячмень, овес, рожь' }
+        ]},
+        { okved: '01.41', desc: 'Разведение молочного скота', okpd: [
+            { code: '01.41.1', desc: 'Молоко сырое коровье' },
+            { code: '01.41.2', desc: 'КРС племенной' }
+        ]},
+        // Раздел C: Производство
+        { okved: '10.11', desc: 'Переработка и консервирование мяса', okpd: [
+            { code: '10.11.1', desc: 'Мясо охлажденное' },
+            { code: '10.11.2', desc: 'Мясо замороженное' },
+            { code: '10.11.3', desc: 'Колбасные изделия' }
+        ]},
+        { okved: '10.71', desc: 'Производство хлеба', okpd: [
+            { code: '10.71.1', desc: 'Хлеб и хлебобулочные изделия' },
+            { code: '10.71.2', desc: 'Мучные кондитерские изделия' }
+        ]},
+        { okved: '13.20', desc: 'Производство текстильных тканей', okpd: [
+            { code: '13.20.1', desc: 'Ткани хлопчатобумажные' },
+            { code: '13.20.2', desc: 'Ткани синтетические' }
+        ]},
+        { okved: '16.10', desc: 'Распиловка древесины', okpd: [
+            { code: '16.10.1', desc: 'Пиломатериалы' },
+            { code: '16.10.2', desc: 'Древесина профилированная' }
+        ]},
+        { okved: '20.11', desc: 'Производство газов', okpd: [
+            { code: '20.11.1', desc: 'Кислород' },
+            { code: '20.11.2', desc: 'Азот' }
+        ]},
+        { okved: '22.19', desc: 'Производство резиновых изделий', okpd: [
+            { code: '22.19.1', desc: 'Ремни резиновые' },
+            { code: '22.19.2', desc: 'Трубки резиновые' }
+        ]},
+        { okved: '25.11', desc: 'Производство металлоконструкций', okpd: [
+            { code: '25.11.1', desc: 'Металлоконструкции строительные' }
+        ]},
+        { okved: '26.20', desc: 'Производство компьютеров', okpd: [
+            { code: '26.20.1', desc: 'Компьютеры, ноутбуки' },
+            { code: '26.20.2', desc: 'Серверы, СХД' }
+        ]},
+        { okved: '26.30', desc: 'Производство коммуникационного оборудования', okpd: [
+            { code: '26.30.1', desc: 'Средства связи' }
+        ]},
+        { okved: '26.51', desc: 'Производство измерительных приборов', okpd: [
+            { code: '26.51.1', desc: 'Приборы для измерения' },
+            { code: '26.51.2', desc: 'Лабораторное оборудование' }
+        ]},
+        { okved: '27.11', desc: 'Производство электродвигателей', okpd: [
+            { code: '27.11.1', desc: 'Электродвигатели' }
+        ]},
+        { okved: '28.22', desc: 'Производство подъемного оборудования', okpd: [
+            { code: '28.22.1', desc: 'Краны' },
+            { code: '28.22.2', desc: 'Конвейеры' }
+        ]},
+        { okved: '29.10', desc: 'Производство автомобилей', okpd: [
+            { code: '29.10.1', desc: 'Легковые автомобили' },
+            { code: '29.10.2', desc: 'Автобусы' }
+        ]},
+        { okved: '30.20', desc: 'Производство ЖД техники', okpd: [
+            { code: '30.20.1', desc: 'Локомотивы' }
+        ]},
+        { okved: '31.01', desc: 'Производство мебели', okpd: [
+            { code: '31.01.1', desc: 'Мебель для офисов' },
+            { code: '31.01.2', desc: 'Мебель для кухни' },
+            { code: '31.01.3', desc: 'Мебель деревянная' }
+        ]},
+        { okved: '32.40', desc: 'Производство игр и игрушек', okpd: [
+            { code: '32.40.1', desc: 'Куклы, игрушки' },
+            { code: '32.40.2', desc: 'Настольные игры' }
+        ]},
+        // Раздел F: Строительство
+        { okved: '41.10', desc: 'Разработка строительных проектов', okpd: [
+            { code: '41.10.1', desc: 'Проектная документация' }
+        ]},
+        { okved: '41.20', desc: 'Строительство зданий', okpd: [
+            { code: '41.20.1', desc: 'Жилые здания' },
+            { code: '41.20.2', desc: 'Нежилые здания' },
+            { code: '41.20.3', desc: 'Работы строительные' }
+        ]},
+        { okved: '42.11', desc: 'Строительство автодорог', okpd: [
+            { code: '42.11.1', desc: 'Автомагистрали' },
+            { code: '42.11.2', desc: 'Мосты' }
+        ]},
+        { okved: '42.21', desc: 'Строительство коммуникаций', okpd: [
+            { code: '42.21.1', desc: 'Трубопроводы' }
+        ]},
+        { okved: '43.21', desc: 'Электромонтажные работы', okpd: [
+            { code: '43.21.1', desc: 'Электромонтаж' }
+        ]},
+        { okved: '43.22', desc: 'Сантехнические работы', okpd: [
+            { code: '43.22.1', desc: 'Отопление' },
+            { code: '43.22.2', desc: 'Водопровод' }
+        ]},
+        { okved: '43.31', desc: 'Штукатурные работы', okpd: [
+            { code: '43.31.1', desc: 'Штукатурка' }
+        ]},
+        { okved: '43.32', desc: 'Столярные работы', okpd: [
+            { code: '43.32.1', desc: 'Установка дверей' }
+        ]},
+        { okved: '43.33', desc: 'Работы по покрытию полов', okpd: [
+            { code: '43.33.1', desc: 'Укладка плитки' }
+        ]},
+        { okved: '43.34', desc: 'Малярные работы', okpd: [
+            { code: '43.34.1', desc: 'Покраска' }
+        ]},
+        // Раздел G: Торговля
+        { okved: '45.11', desc: 'Торговля автомобилями', okpd: [
+            { code: '45.11.1', desc: 'Автомобили легковые' }
+        ]},
+        { okved: '45.20', desc: 'Техобслуживание авто', okpd: [
+            { code: '45.20.1', desc: 'Ремонт авто' }
+        ]},
+        { okved: '46.11', desc: 'Оптовая торговля сельхозпродукцией', okpd: [
+            { code: '46.11.1', desc: 'Зерно оптом' }
+        ]},
+        { okved: '46.43', desc: 'Оптовая торговля бытовой техникой', okpd: [
+            { code: '46.43.1', desc: 'Холодильники оптом' }
+        ]},
+        { okved: '46.46', desc: 'Оптовая торговля фармацевтикой', okpd: [
+            { code: '46.46.1', desc: 'Лекарства оптом' }
+        ]},
+        { okved: '47.11', desc: 'Розничная торговля', okpd: [
+            { code: '47.11.1', desc: 'Продукты' },
+            { code: '47.11.2', desc: 'Напитки' }
+        ]},
+        { okved: '47.21', desc: 'Торговля фруктами', okpd: [
+            { code: '47.21.1', desc: 'Овощи, фрукты' }
+        ]},
+        { okved: '47.23', desc: 'Рыбная торговля', okpd: [
+            { code: '47.23.1', desc: 'Рыба' }
+        ]},
+        { okved: '47.29', desc: 'Молочная торговля', okpd: [
+            { code: '47.29.1', desc: 'Молоко, сыры' }
+        ]},
+        { okved: '47.52', desc: 'Торговля скобяными изделиями', okpd: [
+            { code: '47.52.1', desc: 'Инструменты' }
+        ]},
+        { okved: '47.54', desc: 'Торговля электроникой', okpd: [
+            { code: '47.54.1', desc: 'Телевизоры' }
+        ]},
+        { okved: '47.59', desc: 'Торговля мебелью', okpd: [
+            { code: '47.59.1', desc: 'Мебель бытовая' }
+        ]},
+        { okved: '47.64', desc: 'Спорттовары', okpd: [
+            { code: '47.64.1', desc: 'Инвентарь' }
+        ]},
+        // Раздел H: Транспорт
+        { okved: '49.20', desc: 'ЖД перевозки', okpd: [
+            { code: '49.20.1', desc: 'Грузы ЖД' },
+            { code: '49.20.2', desc: 'Пассажиры ЖД' }
+        ]},
+        { okved: '49.31', desc: 'Городские перевозки', okpd: [
+            { code: '49.31.1', desc: 'Автобусы' }
+        ]},
+        { okved: '49.41', desc: 'Грузовые перевозки', okpd: [
+            { code: '49.41.1', desc: 'Грузоперевозки авто' },
+            { code: '49.41.2', desc: 'Услуги грузчиков' }
+        ]},
+        { okved: '50.10', desc: 'Морские перевозки', okpd: [
+            { code: '50.10.1', desc: 'Морские грузы' }
+        ]},
+        { okved: '51.10', desc: 'Авиаперевозки', okpd: [
+            { code: '51.10.1', desc: 'Авиапассажиры' }
+        ]},
+        { okved: '52.10', desc: 'Складское хозяйство', okpd: [
+            { code: '52.10.1', desc: 'Складирование' }
+        ]},
+        // Раздел I: IT и связь
+        { okved: '58.11', desc: 'Издание книг', okpd: [
+            { code: '58.11.1', desc: 'Книги' }
+        ]},
+        { okved: '58.13', desc: 'Издание газет', okpd: [
+            { code: '58.13.1', desc: 'Газеты' }
+        ]},
+        { okved: '58.14', desc: 'Издание журналов', okpd: [
+            { code: '58.14.1', desc: 'Журналы' }
+        ]},
+        { okved: '58.19', desc: 'Издательская деятельность прочая', okpd: [
+            { code: '58.19.1', desc: 'Прочие издания' }
+        ]},
+        { okved: '58.29', desc: 'Издание прочих программных продуктов', okpd: [
+            { code: '58.29.1', desc: 'ПО для бизнеса, системы, САПР, базы данных' },
+            { code: '58.29.2', desc: 'Обучающие программы' },
+            { code: '58.29.3', desc: 'Развлекательный софт, игры' },
+            { code: '58.29.4', desc: 'Услуги по предоставлению ПО онлайн (SaaS)' }
+        ]},
+        { okved: '61.10', desc: 'Деятельность в области связи', okpd: [
+            { code: '61.10.1', desc: 'Телефония' },
+            { code: '61.10.2', desc: 'Интернет' }
+        ]},
+        { okved: '62.01', desc: 'Разработка ПО', okpd: [
+            { code: '62.01.1', desc: 'Разработка ПО под заказ' },
+            { code: '62.01.2', desc: 'Веб-разработка' }
+        ]},
+        { okved: '62.02', desc: 'IT-консалтинг', okpd: [
+            { code: '62.02.1', desc: 'IT-консалтинг' }
+        ]},
+        { okved: '62.03', desc: 'Управление IT-оборудованием', okpd: [
+            { code: '62.03.1', desc: 'Техподдержка' }
+        ]},
+        { okved: '63.11', desc: 'Обработка данных, хостинг', okpd: [
+            { code: '63.11.1', desc: 'Хостинг' },
+            { code: '63.11.2', desc: 'Облачные услуги' }
+        ]},
+        // Раздел J: Финансы
+        { okved: '64.19', desc: 'Банковские услуги', okpd: [
+            { code: '64.19.1', desc: 'Услуги банков' }
+        ]},
+        { okved: '64.99', desc: 'Финансовые услуги', okpd: [
+            { code: '64.99.1', desc: 'Инвестиции' }
+        ]},
+        { okved: '65.12', desc: 'Страхование', okpd: [
+            { code: '65.12.1', desc: 'Страхование жизни' },
+            { code: '65.12.2', desc: 'Страхование имущества' }
+        ]},
+        // Раздел K: Недвижимость
+        { okved: '68.10', desc: 'Покупка/продажа недвижимости', okpd: [
+            { code: '68.10.1', desc: 'Риелторские услуги' }
+        ]},
+        { okved: '68.20', desc: 'Аренда недвижимости', okpd: [
+            { code: '68.20.1', desc: 'Аренда жилья' },
+            { code: '68.20.2', desc: 'Аренда офисов' }
+        ]},
+        { okved: '68.31', desc: 'Агентства недвижимости', okpd: [
+            { code: '68.31.1', desc: 'Риелторские услуги' }
+        ]},
+        { okved: '68.32', desc: 'Управление недвижимостью', okpd: [
+            { code: '68.32.1', desc: 'Услуги УК' }
+        ]},
+        // Раздел L: Профессиональные услуги (твои)
+        { okved: '69.10', desc: 'Деятельность в области права', okpd: [
+            { code: '69.10.1', desc: 'Представление в суде' },
+            { code: '69.10.2', desc: 'Правовые консультации' }
+        ]},
+        { okved: '69.20', desc: 'Бухгалтерия, аудит, налоги', okpd: [
+            { code: '69.20.1', desc: 'Финансовый аудит' },
+            { code: '69.20.2', desc: 'Услуги по бухучету' },
+            { code: '69.20.3', desc: 'Налоговое консультирование' }
+        ]},
+        { okved: '69.20.1', desc: 'Финансовый аудит', okpd: [
+            { code: '69.20.1', desc: 'Аудиторские проверки' }
+        ]},
+        { okved: '69.20.2', desc: 'Бухгалтерский учет', okpd: [
+            { code: '69.20.2', desc: 'Ведение бухгалтерии' }
+        ]},
+        { okved: '69.20.3', desc: 'Налоговое консультирование', okpd: [
+            { code: '69.20.3', desc: 'Консультации по налогам' }
+        ]},
+        { okved: '70.22', desc: 'Консультирование по управлению', okpd: [
+            { code: '70.22.1', desc: 'Стратегический консалтинг' },
+            { code: '70.22.2', desc: 'Управление проектами' }
+        ]},
+        { okved: '71.12.61', desc: 'Техническое регулирование', okpd: [
+            { code: '71.12.6', desc: 'Услуги по стандартизации, сертификации' }
+        ]},
+        { okved: '72.19', desc: 'НИР в технических науках', okpd: [
+            { code: '72.19.1', desc: 'НИР в математике' },
+            { code: '72.19.2', desc: 'НИР в физике' },
+            { code: '72.19.3', desc: 'НИР в химии' },
+            { code: '72.19.4', desc: 'НИР в биологии' }
+        ]},
+        { okved: '72.20', desc: 'НИР в гуманитарных науках', okpd: [
+            { code: '72.20.1', desc: 'НИР в социологии' },
+            { code: '72.20.2', desc: 'НИР в экономике, праве' }
+        ]},
+        { okved: '73.20', desc: 'Исследование рынка', okpd: [
+            { code: '73.20.1', desc: 'Маркетинговые исследования' },
+            { code: '73.20.2', desc: 'Опросы' }
+        ]},
+        { okved: '74.20', desc: 'Фотография', okpd: [
+            { code: '74.20.1', desc: 'Фотоуслуги' }
+        ]},
+        { okved: '74.90', desc: 'Профессиональная деятельность прочая', okpd: [
+            { code: '74.90.1', desc: 'Услуги переводчиков' },
+            { code: '74.90.2', desc: 'Дизайн' },
+            { code: '74.90.3', desc: 'Экспертные услуги' }
+        ]},
+        // Раздел M: Образование
+        { okved: '85.11', desc: 'Дошкольное образование', okpd: [
+            { code: '85.11.1', desc: 'Детские сады' }
+        ]},
+        { okved: '85.12', desc: 'Начальное образование', okpd: [
+            { code: '85.12.1', desc: 'Школы начальные' }
+        ]},
+        { okved: '85.13', desc: 'Основное общее', okpd: [
+            { code: '85.13.1', desc: 'Школы' }
+        ]},
+        { okved: '85.14', desc: 'Среднее профессиональное', okpd: [
+            { code: '85.14.1', desc: 'Колледжи' }
+        ]},
+        { okved: '85.21', desc: 'Профессиональное обучение', okpd: [
+            { code: '85.21.1', desc: 'Курсы повышения квалификации' }
+        ]},
+        { okved: '85.41', desc: 'Дополнительное образование', okpd: [
+            { code: '85.41.1', desc: 'Кружки, секции' },
+            { code: '85.41.2', desc: 'Курсы иностранных языков' }
+        ]},
+        // Раздел N: Здравоохранение
+        { okved: '86.10', desc: 'Больницы', okpd: [
+            { code: '86.10.1', desc: 'Услуги стационаров' }
+        ]},
+        { okved: '86.21', desc: 'Поликлиники', okpd: [
+            { code: '86.21.1', desc: 'Услуги поликлиник' }
+        ]},
+        { okved: '86.22', desc: 'Стоматология', okpd: [
+            { code: '86.22.1', desc: 'Услуги стоматологов' }
+        ]},
+        { okved: '86.90', desc: 'Медицина прочая', okpd: [
+            { code: '86.90.1', desc: 'Лаборатории' },
+            { code: '86.90.2', desc: 'Скорая помощь' }
+        ]},
+        // Раздел Q: Ремонт
+        { okved: '95.11', desc: 'Ремонт компьютеров', okpd: [
+            { code: '95.11.1', desc: 'Ремонт ПК' }
+        ]},
+        { okved: '96.01', desc: 'Стирка и химчистка', okpd: [
+            { code: '96.01.1', desc: 'Прачечные' }
+        ]},
+        { okved: '96.02', desc: 'Парикмахерские', okpd: [
+            { code: '96.02.1', desc: 'Стрижка' }
+        ]}
+    ];
+
+    // ================= ФУНКЦИИ ПОИСКА =================
+    function findOkved(input) {
+        if (!input || input.trim() === '') return null;
+        const cleanInput = input.trim().replace(/\s+/g, '');
+        
+        // Точное совпадение
+        let exact = okvedDb.find(item => item.okved === cleanInput);
+        if (exact) return exact;
+
+        // Поиск по родительскому коду (если ввели 58.29.1)
+        const parts = cleanInput.split('.');
+        if (parts.length > 2) {
+            const parentCode = parts.slice(0, 2).join('.');
+            exact = okvedDb.find(item => item.okved === parentCode);
+            if (exact) return exact;
+        }
+
+        // Поиск по началу
+        return okvedDb.find(item => item.okved.startsWith(cleanInput) || cleanInput.startsWith(item.okved));
+    }
+
+    function renderResult(record, inputCode) {
+        if (!record) {
+            return `
+                <div style="padding: 70px 30px; text-align: center; background: #fafdff;">
+                    <div style="font-size: 5rem; margin-bottom: 20px;">🤷‍♂️</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: #1a3855;">НИЧЕГО НЕ НАЙДЕНО</div>
+                    <div style="font-size: 1.3rem; color: #4d6f94; margin: 20px auto; max-width: 600px;">
+                        ОКВЭД <strong>${inputCode || '?'}</strong> отсутствует в базе или введен некорректно.
+                    </div>
+                    <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <span class="chip" data-code="58.29">58.29</span>
+                        <span class="chip" data-code="62.01">62.01</span>
+                        <span class="chip" data-code="41.20">41.20</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        const rows = record.okpd.map(item => {
+            const searchUrl = `https://zakupki.gov.ru/epz/order/extendedsearch/results.html?searchString=${item.code}`;
+            return `
+                <tr>
+                    <td><span class="code-badge">${item.code}</span></td>
+                    <td>${item.desc}</td>
+                    <td style="text-align: center;">
+                        <a href="${searchUrl}" target="_blank" class="search-link">🔍 Искать на zakupki</a>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // ДОБАВЛЯЕМ МЯГКИЙ CTA БЛОК ПОСЛЕ ТАБЛИЦЫ
+        return `
+            <div class="result-header">
+                <h2>
+                    📌 ОКВЭД ${record.okved}
+                    <small>${record.desc}</small>
+                </h2>
+            </div>
+            <div class="result-okved-desc">
+                ⚡ Коды ОКПД2 для поиска закупок:
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Код ОКПД2</th>
+                            <th>Описание товара/услуги</th>
+                            <th style="width: 220px;">Поиск</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+            </div>
+            <!-- МЯГКИЙ CTA БЛОК -->
+            <div class="cta-soft">
+                <div class="cta-soft-text">
+                    🔥 <strong>Хотите участвовать в закупках по этому коду?</strong> Мы бесплатно подберем активные тендеры и поможем с заявкой.
+                </div>
+                <div class="cta-soft-buttons">
+                    <a href="https://t.me/efimov_legal?text=Здравствуйте! Нужна помощь с закупками по коду ${record.okved}" target="_blank" class="cta-button cta-button-tg">
+                        ✈️ Telegram
+                    </a>
+                    <a href="https://wa.me/79539077575?text=Здравствуйте! Нужна помощь с закупками по коду ${record.okved}" target="_blank" class="cta-button cta-button-wa">
+                        💬 WhatsApp
+                    </a>
+                </div>
+            </div>
+            <div class="warning-note">
+                💡 <strong>Важно:</strong> Один ОКВЭД может соответствовать нескольким ОКПД2. Выбирайте код, который точнее описывает ваш товар или услугу для конкретной закупки.
+            </div>
+        `;
+    }
+
+    function renderDefault() {
+        return `
+            <div style="padding: 70px 30px; text-align: center; background: #fafdff;">
+                <div style="font-size: 5rem; margin-bottom: 20px;">🔎</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #1a3855;">ВВЕДИТЕ КОД ОКВЭД</div>
+                <div style="font-size: 1.3rem; color: #4d6f94; margin-top: 16px;">
+                    Например: 58.29, 41.20, 62.01, 69.20, 85.41
+                </div>
+            </div>
+        `;
+    }
+
+    function displayResult(record, inputCode) {
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = renderResult(record, inputCode);
+        // Перепривязываем обработчики чипсов внутри результата
+        document.querySelectorAll('.chip[data-code]').forEach(chip => {
+            chip.removeEventListener('click', chipClickHandler);
+            chip.addEventListener('click', chipClickHandler);
+        });
+    }
+
+    function displayDefault() {
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = renderDefault();
+        document.querySelectorAll('.chip[data-code]').forEach(chip => {
+            chip.removeEventListener('click', chipClickHandler);
+            chip.addEventListener('click', chipClickHandler);
+        });
+    }
+
+    function chipClickHandler(e) {
+        const code = e.currentTarget.getAttribute('data-code');
+        if (code) {
+            document.getElementById('okvedInput').value = code;
+            performSearch();
+        }
+    }
+
+    function performSearch() {
+        const input = document.getElementById('okvedInput').value;
+        const record = findOkved(input);
+        displayResult(record, input);
+    }
+
+    function resetSearch() {
+        document.getElementById('okvedInput').value = '';
+        displayDefault();
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+        displayDefault();
+
+        document.getElementById('searchBtn').addEventListener('click', performSearch);
+        document.getElementById('resetBtn').addEventListener('click', resetSearch);
+        
+        document.getElementById('okvedInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        // Чипсы в верхней панели
+        document.querySelectorAll('.search-panel .chip[data-code]').forEach(chip => {
+            chip.addEventListener('click', chipClickHandler);
+        });
+
+        // Показываем пример при загрузке
+        setTimeout(() => {
+            document.getElementById('okvedInput').value = '58.29';
+            performSearch();
+        }, 150);
+    });
+})();
+</script>
+</body>
+</html>
