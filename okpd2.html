@@ -8,7 +8,7 @@
     <meta name="keywords" content="оквэд окпд2, подбор окпд2 по оквэд, соответствие оквэд и окпд2, окпд2 для закупок, тендеры, госзакупки, 44-фз, 223-фз" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
     
-    <!-- OPEN GRAPH (ДЛЯ СОЦСЕТЕЙ) - ИСПРАВЛЕНО -->
+    <!-- OPEN GRAPH -->
     <meta property="og:title" content="ОКВЭД → ОКПД2: бесплатный подбор кодов для госзакупок" />
     <meta property="og:description" content="Введи любой код ОКВЭД — получи соответствующие коды ОКПД2 для поиска тендеров на zakupki.gov.ru. 400+ групп, 1500+ кодов, ссылки на закупки. Бесплатно и без регистрации." />
     <meta property="og:image" content="https://auditor.efimov-legal.ru/images/okved-preview.jpg" />
@@ -50,7 +50,7 @@
             background: linear-gradient(145deg, #0a1828 0%, #162b40 100%);
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Изменено с center на flex-start */
+            align-items: flex-start;
             margin: 0;
             padding: 20px;
             position: relative;
@@ -65,7 +65,7 @@
             box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
             padding: 36px;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            margin: 20px auto; /* Центрирование по горизонтали */
+            margin: 20px auto;
             position: relative;
             z-index: 1;
         }
@@ -518,6 +518,96 @@
             text-underline-offset: 4px;
         }
         
+        /* НОВЫЙ БЛОК: КНОПКИ ПОДЕЛИТЬСЯ + СЧЁТЧИК */
+        .share-block {
+            background: white;
+            border-radius: 80px;
+            padding: 16px 28px;
+            margin: 20px 0 30px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow: 0 10px 25px -10px rgba(0,0,0,0.1);
+            border: 1px solid #d0e0f5;
+        }
+        
+        .share-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1f3b5c;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .share-counter {
+            background: #1f5f8e;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 40px;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+        
+        .share-btn-tg {
+            background: #0088cc;
+        }
+        
+        .share-btn-tg:hover {
+            background: #006699;
+            transform: translateY(-2px);
+        }
+        
+        .share-btn-wa {
+            background: #25D366;
+        }
+        
+        .share-btn-wa:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+        
+        .share-btn-vk {
+            background: #4C75A3;
+        }
+        
+        .share-btn-vk:hover {
+            background: #3A5A7F;
+            transform: translateY(-2px);
+        }
+        
+        .share-btn-tw {
+            background: #000000;
+        }
+        
+        .share-btn-tw:hover {
+            background: #333333;
+            transform: translateY(-2px);
+        }
+        
         .footer-note {
             margin-top: 30px;
             text-align: center;
@@ -617,6 +707,18 @@
                 padding: 20px;
                 margin: 15px;
             }
+            
+            .share-block {
+                flex-direction: column;
+                align-items: flex-start;
+                border-radius: 40px;
+                padding: 20px;
+            }
+            
+            .share-buttons {
+                width: 100%;
+                justify-content: center;
+            }
         }
         
         @media (max-width: 480px) {
@@ -648,6 +750,15 @@
             }
             
             .cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .share-buttons {
+                flex-direction: column;
+            }
+            
+            .share-btn {
                 width: 100%;
                 justify-content: center;
             }
@@ -697,6 +808,20 @@
             <!-- вставится через js -->
         </div>
 
+        <!-- БЛОК ПОДЕЛИТЬСЯ С СЧЁТЧИКОМ -->
+        <div class="share-block" id="shareBlock">
+            <div class="share-title">
+                <span>📢 Поделиться инструментом</span>
+                <span class="share-counter" id="shareCounter">0</span>
+            </div>
+            <div class="share-buttons">
+                <a href="#" target="_blank" class="share-btn share-btn-tg" id="shareTelegram">✈️ Telegram</a>
+                <a href="#" target="_blank" class="share-btn share-btn-wa" id="shareWhatsApp">💬 WhatsApp</a>
+                <a href="#" target="_blank" class="share-btn share-btn-vk" id="shareVK">📘 VK</a>
+                <a href="#" target="_blank" class="share-btn share-btn-tw" id="shareTwitter">𝕏 Twitter</a>
+            </div>
+        </div>
+
         <!-- КОНТАКТНЫЙ БЛОК -->
         <div class="contact-block">
             <div class="contact-text">
@@ -728,7 +853,7 @@
         </div>
     </div>
 
-    <!-- СКРЫТЫЙ SEO-БЛОК -->
+    <!-- СКРЫТЫЙ SEO-БЛОК (ОСТАВЛЯЕМ КАК ЕСТЬ) -->
     <div class="seo-hidden">
         <h2>Подробное руководство по работе с инструментом</h2>
         <p>Наш инструмент создан для профессионалов и новичков. Мы добавили скрытый текст, чтобы структурировать информацию. Перед началом работы мы настоятельно рекомендуем добавить страницу в закладки браузера. Интерфейс интуитивно понятен, но давайте разберем ключевые аспекты детально. Главная цель инструмента — автоматизировать рутину, чтобы вы могли сосредоточиться на творчестве. Многие пользователи хотят добавить функционал в свой арсенал, и наше решение идеально для этого подходит.</p>
@@ -1075,6 +1200,34 @@
                 ]}
             ];
 
+            // ========== СЧЁТЧИК ПОДЕЛИТЬСЯ ==========
+            let shareCount = localStorage.getItem('shareCount') ? parseInt(localStorage.getItem('shareCount')) : 0;
+            const shareCounterElem = document.getElementById('shareCounter');
+            if (shareCounterElem) shareCounterElem.textContent = shareCount;
+
+            function incrementShareCounter() {
+                shareCount++;
+                localStorage.setItem('shareCount', shareCount);
+                if (shareCounterElem) shareCounterElem.textContent = shareCount;
+            }
+
+            // ========== НАСТРОЙКА ССЫЛОК ДЛЯ РЕПОСТОВ ==========
+            const pageUrl = encodeURIComponent('https://auditor.efimov-legal.ru/okpd2');
+            const pageTitle = encodeURIComponent('ОКВЭД → ОКПД2: бесплатный подбор кодов для госзакупок');
+            
+            document.getElementById('shareTelegram').href = `https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`;
+            document.getElementById('shareWhatsApp').href = `https://wa.me/?text=${pageTitle}%20${pageUrl}`;
+            document.getElementById('shareVK').href = `https://vk.com/share.php?url=${pageUrl}&title=${pageTitle}`;
+            document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`;
+
+            // При клике на любую кнопку "Поделиться" увеличиваем счётчик
+            document.querySelectorAll('.share-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(incrementShareCounter, 500); // небольшая задержка, чтобы репост точно открылся
+                });
+            });
+
+            // ========== ФУНКЦИИ ПОИСКА ==========
             function findOkved(input) {
                 if (!input || input.trim() === '') return null;
                 const cleanInput = input.trim().replace(/\s+/g, '');
@@ -1215,6 +1368,7 @@
                 displayDefault();
             }
 
+            // Инициализация
             document.addEventListener('DOMContentLoaded', () => {
                 displayDefault();
 
